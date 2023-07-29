@@ -5,31 +5,30 @@ import 'slim-select/dist/slimselect.css';
 import Notiflix from 'notiflix';
 import { slimSelectOptions } from './select-breed';
 
-//Напиши функцію fetchBreeds(), яка виконує HTTP-запит і повертає проміс із масивом порід
-//- результатом запиту. Винеси її у файл cat-api.js та зроби іменований експорт.
 fetchBreeds()
   .then(breedsList => {
     hideElement(links.loaderText);
-    const breedsIdArray = breedsList.map(breed => ({
+    const breedsIDArray = breedsList.map(breed => ({
       text: breed.name,
       value: breed.id,
     }));
 
     const slimSelect = new SlimSelect(slimSelectOptions);
 
-    slimSelect.setData(breedsIdArray);
+    slimSelect.setData(breedsIDArray);
   })
-  .catch(error => {
-    console.log(error);
+  .catch(() => {
     hideElement(links.loaderText);
     Notiflix.Notify.failure('Інформація не завантажилась. Спробуйте ще раз!');
   });
 
+//Initialize the Notify Module with some options
 Notiflix.Notify.init({
   width: '280px',
-  position: 'left-top',
+  position: 'center-center',
   distance: '10px',
   opacity: 1,
+  clickToClose: true,
 });
 
 //Показати елемент

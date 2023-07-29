@@ -2,7 +2,9 @@ import { fetchCatByBreed } from './cap-api';
 import { createCatMarkUp } from './markup-breed';
 import { links } from './links-breed';
 import Notiflix from 'notiflix';
+import axios from 'axios';
 import { showElement, hideElement } from '.';
+import { BASE_URL } from './cap-api';
 
 let selectBreedID = '';
 
@@ -21,14 +23,9 @@ export const slimSelectOptions = {
       fetchCatByBreed(selectBreedID)
         .then(data => {
           const breedID = data[0].id;
-          return fetch(`https://api.thecatapi.com/v1/images/${breedID}`).then(
-            response => {
-              if (!response.ok) {
-                throw new Error(response.statusText);
-              }
-              return response.json();
-            }
-          );
+          return axios.get(`${BASE_URL}images/${breedID}`).then(response => {
+            return response.data;
+          });
         })
         .then(({ url, breeds }) => {
           const [{ name, description, temperament }] = breeds;
@@ -39,17 +36,17 @@ export const slimSelectOptions = {
             description,
             temperament
           );
+
           links.catInfo.innerHTML = catMarkUp;
 
           hideElement(links.loaderText);
           showElement(links.catInfo);
         })
-        .catch(error => {
+        .catch(() => {
           hideElement(links.loaderText);
           Notiflix.Notify.failure(
             'Інформація не завантажилась. Спробуйте ще раз!'
           );
-          console.log(error);
         });
     },
   },
